@@ -215,44 +215,64 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
       <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
-      <input
-        type="text"
-        id={id}
-        ref={inputRef}
-        value={address}
-        onChange={handleInputChange}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
-        placeholder={placeholder}
-        required={required}
-        className={`w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-800 ${className}`}
-        autoComplete="off"
-      />
-      
-      {/* Loading indicator */}
-      {loadingAutocomplete && (
-        <div className="absolute right-3 top-9">
-          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-800"></div>
-        </div>
-      )}
-      
-      {/* Suggestions dropdown */}
-      {showSuggestions && suggestions.length > 0 && (
-        <ul className="absolute z-50 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-          {suggestions.map((suggestion) => (
-            <li
-              key={suggestion.place_id}
-              className="cursor-pointer px-4 py-2 hover:bg-blue-50 text-gray-900"
-              onMouseDown={(e) => {
-                e.preventDefault(); // Prevent blur event from firing
-                handleSuggestionClick(suggestion);
+      <div className="relative">
+        <input
+          type="text"
+          id={id}
+          ref={inputRef}
+          value={address}
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          placeholder={placeholder}
+          required={required}
+          className={`w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-800 ${className}`}
+          autoComplete="off"
+        />
+        
+        {/* Loading indicator */}
+        {loadingAutocomplete && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-800"></div>
+          </div>
+        )}
+        
+        {/* Suggestions dropdown */}
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="suggestions-container" style={{ position: 'relative' }}>
+            <ul 
+              className="absolute w-full bg-white shadow-xl max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm"
+              style={{ 
+                zIndex: 9999, 
+                top: '0', 
+                left: '0', 
+                marginTop: '4px',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
               }}
             >
-              {suggestion.description}
-            </li>
-          ))}
-        </ul>
-      )}
+              {suggestions.map((suggestion) => (
+                <li
+                  key={suggestion.place_id}
+                  className="cursor-pointer px-4 py-2 hover:bg-blue-50 text-gray-900"
+                  onMouseDown={(e) => {
+                    e.preventDefault(); // Prevent blur event from firing
+                    handleSuggestionClick(suggestion);
+                  }}
+                >
+                  {suggestion.structured_formatting ? (
+                    <>
+                      <div className="font-medium">{suggestion.structured_formatting.main_text}</div>
+                      <div className="text-xs text-gray-500">{suggestion.structured_formatting.secondary_text}</div>
+                    </>
+                  ) : (
+                    suggestion.description
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

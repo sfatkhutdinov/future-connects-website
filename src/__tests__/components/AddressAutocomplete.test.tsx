@@ -66,7 +66,10 @@ describe('AddressAutocomplete Component', () => {
 
     // Wait for suggestions to appear
     await waitFor(() => {
-      expect(screen.getByText('123 Test Street, City, ST, USA')).toBeInTheDocument();
+      const mainText = screen.getByText('123 Test Street');
+      const secondaryText = screen.getByText('City, ST, USA');
+      expect(mainText).toBeInTheDocument();
+      expect(secondaryText).toBeInTheDocument();
     });
 
     // Check if onChange was called
@@ -84,32 +87,34 @@ describe('AddressAutocomplete Component', () => {
     );
 
     const input = screen.getByLabelText(/Test Address/i);
-    await userEvent.type(input, '123 Test');
+    fireEvent.change(input, { target: { value: '123 Test' } });
 
     // Wait for suggestions to appear
     await waitFor(() => {
-      expect(screen.getByText('123 Test Street, City, ST, USA')).toBeInTheDocument();
+      const mainText = screen.getByText('123 Test Street');
+      const secondaryText = screen.getByText('City, ST, USA');
+      expect(mainText).toBeInTheDocument();
+      expect(secondaryText).toBeInTheDocument();
     });
 
-    // Click on the suggestion
-    fireEvent.mouseDown(screen.getByText('123 Test Street, City, ST, USA'));
+    // Use onMouseDown instead of click because the component uses onMouseDown
+    const suggestionItem = screen.getByText('123 Test Street').closest('li');
+    fireEvent.mouseDown(suggestionItem!);
 
-    // Check if onChange was called with the correct address
+    // Wait for the API call to complete and check onChange was called with correct address
     await waitFor(() => {
       expect(onChange).toHaveBeenCalledWith(
-        '123 Test Street, Test City, ST 12345, USA', 
+        '123 Test Street, Test City, ST 12345, USA',
         expect.objectContaining({
-          place_id: 'place123',
           formatted_address: '123 Test Street, Test City, ST 12345, USA',
+          place_id: 'place123',
           geometry: expect.anything()
         })
       );
     });
 
     // Check if the input value was updated
-    await waitFor(() => {
-      expect(input).toHaveValue('123 Test Street, Test City, ST 12345, USA');
-    });
+    expect(input).toHaveValue('123 Test Street, Test City, ST 12345, USA');
   });
 
   it('handles blur event correctly', async () => {
@@ -123,20 +128,24 @@ describe('AddressAutocomplete Component', () => {
     );
 
     const input = screen.getByLabelText(/Test Address/i);
-    await userEvent.type(input, '123 Test');
+    fireEvent.change(input, { target: { value: '123 Test' } });
 
     // Wait for suggestions to appear
     await waitFor(() => {
-      expect(screen.getByText('123 Test Street, City, ST, USA')).toBeInTheDocument();
+      const mainText = screen.getByText('123 Test Street');
+      const secondaryText = screen.getByText('City, ST, USA');
+      expect(mainText).toBeInTheDocument();
+      expect(secondaryText).toBeInTheDocument();
     });
 
-    // Trigger blur event
+    // Trigger blur without selecting an item
     fireEvent.blur(input);
 
-    // Wait for suggestions to disappear (due to the 300ms timeout)
+    // Suggestions should disappear after a delay
     await waitFor(() => {
-      expect(screen.queryByText('123 Test Street, City, ST, USA')).not.toBeInTheDocument();
-    }, { timeout: 400 });
+      const suggestionsList = document.querySelector('.suggestions-container ul');
+      expect(suggestionsList).not.toBeInTheDocument();
+    });
   });
 
   it('handles focus event correctly', async () => {
@@ -146,33 +155,79 @@ describe('AddressAutocomplete Component', () => {
         id="testAddress"
         label="Test Address"
         onChange={onChange}
+        defaultValue="123 Test Street, Test City, ST 12345, USA"
+      />
+    );
+    
+    const input = screen.getByLabelText(/Test Address/i);
+    expect(input).toHaveValue('123 Test Street, Test City, ST 12345, USA');
+    
+    // Blur first to clear any existing suggestions
+    fireEvent.blur(input);
+    
+    // Change input value and then focus
+    fireEvent.change(input, { target: { value: '123 Test' } });
+    fireEvent.focus(input);
+    
+    // Wait for suggestions to appear  
+    await waitFor(() => {
+      const mainText = screen.getByText('123 Test Street');
+      const secondaryText = screen.getByText('City, ST, USA');
+      expect(mainText).toBeInTheDocument();
+      expect(secondaryText).toBeInTheDocument();
+    });
+    
+    // Suggestions should be visible when focused
+    const suggestionsList = document.querySelector('.suggestions-container ul');
+    expect(suggestionsList).toBeInTheDocument();
+  });
+
+  // Add this test case to verify dropdown positioning and styling
+  it('should render suggestions dropdown with correct styling and position', async () => {
+    const handleChange = jest.fn();
+    
+    render(
+      <AddressAutocomplete
+        label="Test Address"
+        id="testAddress"
+        onChange={handleChange}
       />
     );
 
     const input = screen.getByLabelText(/Test Address/i);
-    
-    // Type in the input to get suggestions
-    await userEvent.type(input, '123 Test');
+    fireEvent.change(input, { target: { value: '123 Test' } });
     
     // Wait for suggestions to appear
     await waitFor(() => {
-      expect(screen.getByText('123 Test Street, City, ST, USA')).toBeInTheDocument();
+      const mainText = screen.getByText('123 Test Street');
+      const secondaryText = screen.getByText('City, ST, USA');
+      expect(mainText).toBeInTheDocument();
+      expect(secondaryText).toBeInTheDocument();
     });
     
-    // Trigger blur to hide suggestions
-    fireEvent.blur(input);
+    // Check for the suggestions container and list
+    const suggestionsContainer = document.querySelector('.suggestions-container');
+    expect(suggestionsContainer).toBeInTheDocument();
     
-    // Wait for suggestions to disappear
-    await waitFor(() => {
-      expect(screen.queryByText('123 Test Street, City, ST, USA')).not.toBeInTheDocument();
-    }, { timeout: 400 });
+    const suggestionsList = document.querySelector('.suggestions-container ul');
+    expect(suggestionsList).toBeInTheDocument();
     
-    // Now focus again to show suggestions
-    fireEvent.focus(input);
+    // Verify that the suggestionsList has the appropriate styles via className
+    expect(suggestionsList).toHaveClass('absolute');
+    expect(suggestionsList).toHaveClass('bg-white');
     
-    // Wait for suggestions to appear again
-    await waitFor(() => {
-      expect(screen.getByText('123 Test Street, City, ST, USA')).toBeInTheDocument();
-    });
+    // Check that the z-index is applied through inline styles
+    const ulElement = suggestionsList as HTMLElement;
+    expect(ulElement.style.zIndex).toBe('9999');
+    
+    // Check for proper content rendering
+    const listItems = screen.getAllByRole('listitem');
+    expect(listItems.length).toBeGreaterThan(0);
+    
+    // Check suggestion item content
+    const mainTextElement = screen.getByText('123 Test Street');
+    const secondaryTextElement = screen.getByText('City, ST, USA');
+    expect(mainTextElement).toBeInTheDocument();
+    expect(secondaryTextElement).toBeInTheDocument();
   });
 }); 

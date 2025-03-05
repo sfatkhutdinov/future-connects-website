@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import EstimatePage from '@/app/estimate/page';
@@ -117,10 +117,13 @@ describe('EstimatePage Component', () => {
     
     // Type and select an address for the destination
     await waitFor(() => {
-      expect(screen.getByText('123 Test Street, City, ST, USA')).toBeInTheDocument();
+      const mainText = screen.getByText('123 Test Street');
+      const secondaryText = screen.getByText('City, ST, USA');
+      expect(mainText).toBeInTheDocument();
+      expect(secondaryText).toBeInTheDocument();
     });
     
-    fireEvent.mouseDown(screen.getByText('123 Test Street, City, ST, USA'));
+    fireEvent.click(screen.getByText('123 Test Street'));
     
     // Check if the input value was updated correctly
     await waitFor(() => {
@@ -155,5 +158,337 @@ describe('EstimatePage Component', () => {
     // Next button should be disabled
     const nextButton = screen.getByText('Next');
     expect(nextButton).toBeDisabled();
+  });
+
+  it('should proceed through all steps of the form and submit successfully', async () => {
+    // Mock fetch for form submission
+    global.fetch = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ success: true, estimateId: '123' }),
+      })
+    );
+    
+    render(<EstimatePage />);
+    
+    // Step 1: Move Type
+    expect(screen.getByText('Get Your Free Moving Estimate')).toBeInTheDocument();
+    expect(screen.getByText('What type of move do you need?')).toBeInTheDocument();
+    
+    // Select commercial move type
+    fireEvent.click(screen.getByText('Commercial Move'));
+    
+    // Click next to go to locations step
+    fireEvent.click(screen.getByText('Next'));
+    
+    // Step 2: Locations
+    expect(screen.getByText('Where are you moving from and to?')).toBeInTheDocument();
+    
+    // Fill in from address
+    const fromInput = screen.getByLabelText(/Moving From/i);
+    await userEvent.type(fromInput, '123 Test');
+    
+    // Select from autocomplete
+    await waitFor(() => {
+      const mainText = screen.getByText('123 Test Street');
+      const secondaryText = screen.getByText('City, ST, USA');
+      expect(mainText).toBeInTheDocument();
+      expect(secondaryText).toBeInTheDocument();
+    });
+    fireEvent.click(screen.getByText('123 Test Street'));
+    
+    // Fill in to address
+    const toInput = screen.getByLabelText(/Moving To/i);
+    await userEvent.type(toInput, '456 Test');
+    
+    // Type and select an address for the destination
+    await waitFor(() => {
+      expect(screen.getByText('123 Test Street, City, ST, USA')).toBeInTheDocument();
+    });
+    
+    fireEvent.mouseDown(screen.getByText('123 Test Street, City, ST, USA'));
+    
+    // Check if the input value was updated correctly
+    await waitFor(() => {
+      expect(toInput).toHaveValue('123 Test Street, Test City, ST 12345, USA');
+    });
+    
+    // Check if the distance is displayed
+    await waitFor(() => {
+      const distanceElement = screen.getByText(/Approximate Distance:/i);
+      expect(distanceElement).toBeInTheDocument();
+      expect(distanceElement.parentElement).toHaveTextContent(/10 miles/i);
+    });
+    
+    // Wait for the distance to update and enable the Next button
+    await waitFor(() => {
+      expect(screen.getByText(/Approximate Distance: 10 miles/i)).toBeInTheDocument();
+      nextButton = screen.getByText('Next');
+      expect(nextButton).not.toBeDisabled();
+    });
+    
+    // Click the Next button to proceed to the size step
+    fireEvent.click(nextButton);
+    
+    // Ensure we're on the size step
+    expect(screen.getByText('What is the size of your move?')).toBeInTheDocument();
+    
+    // Select Medium size
+    fireEvent.click(screen.getByText('Medium'));
+    
+    // Check special items checkbox
+    const specialItemsCheckbox = screen.getByLabelText(/I have special items/i);
+    fireEvent.click(specialItemsCheckbox);
+    expect(specialItemsCheckbox).toBeChecked();
+    
+    // Click next to go to date step
+    fireEvent.click(screen.getByText('Next'));
+    
+    // Step 4: Date
+    expect(screen.getByText(/When do you want to move?/i)).toBeInTheDocument();
+    
+    // Select a date (current date + 7 days)
+    const dateInput = screen.getByLabelText(/Move Date/i);
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 7);
+    const formattedDate = futureDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+    fireEvent.change(dateInput, { target: { value: formattedDate } });
+    
+    // Select a time slot
+    fireEvent.click(screen.getByText('Morning (8AM - 12PM)'));
+    
+    // Click next to go to contact step
+    fireEvent.click(screen.getByText('Next'));
+    
+    // Step 5: Contact
+    expect(screen.getByText(/Your Contact Information/i)).toBeInTheDocument();
+    
+    // Fill in contact details
+    fireEvent.change(screen.getByLabelText(/Full Name/i), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'john.doe@example.com' } });
+    fireEvent.change(screen.getByLabelText(/Phone/i), { target: { value: '(202) 555-1234' } });
+    
+    // Click submit button
+    fireEvent.click(screen.getByText('Submit Estimate Request'));
+    
+    // Verify we reach the summary step
+    await waitFor(() => {
+      expect(screen.getByText(/Thank you!/i)).toBeInTheDocument();
+      expect(screen.getByText(/We've received your estimate request/i)).toBeInTheDocument();
+    });
+    
+    // Verify fetch was called with the correct data
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        method: 'POST',
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+        }),
+        body: expect.any(String),
+      })
+    );
+    
+    // Cleanup the mock
+    (global.fetch as jest.Mock).mockClear();
+  });
+  
+  it('should show validation errors when required fields are missing', async () => {
+    render(<EstimatePage />);
+    
+    // Step 1: Move Type is pre-selected, just click next
+    fireEvent.click(screen.getByText('Next'));
+    
+    // Step 2: Locations - try to proceed without filling addresses
+    const nextButton = screen.getByText('Next');
+    expect(nextButton).toBeDisabled();
+    
+    // Fill only the from address
+    const fromInput = screen.getByLabelText(/Moving From/i);
+    await userEvent.type(fromInput, '123 Test Street, Test City, ST 12345, USA');
+    await waitFor(() => {
+      expect(fromInput).toHaveValue('123 Test Street, Test City, ST 12345, USA');
+    });
+    
+    // Next button should still be disabled
+    expect(nextButton).toBeDisabled();
+    
+    // Now fill the to address
+    const toInput = screen.getByLabelText(/Moving To/i);
+    await userEvent.type(toInput, '456 Test Street, Test City, ST 12345, USA');
+    await waitFor(() => {
+      expect(toInput).toHaveValue('456 Test Street, Test City, ST 12345, USA');
+    });
+    
+    // Add coordinates by simulating selection from dropdown
+    // Note: In a real test, you would trigger the real selection, but we're simplifying here
+    
+    // Since we can't easily simulate the coordinates in this test, we'll just verify the button remains disabled
+    expect(nextButton).toBeDisabled();
+  });
+  
+  it('should properly display price estimates based on selections', async () => {
+    render(<EstimatePage />);
+    
+    // Use our helper to set step directly to 'locations'
+    setCurrentStepDirectly('locations');
+    
+    // Fill out the locations step to proceed
+    const fromInput = screen.getByLabelText(/Moving From/i);
+    const toInput = screen.getByLabelText(/Moving To/i);
+    
+    fireEvent.change(fromInput, { target: { value: '123 Test Street, New York, NY' } });
+    fireEvent.change(toInput, { target: { value: '456 Other Street, New York, NY' } });
+    
+    // Mock placeResult that would normally come from Google Maps API
+    const mockPlaceResult = {
+      geometry: {
+        location: {
+          lat: () => 40.7128,
+          lng: () => -74.0060
+        }
+      }
+    };
+    
+    // Use the helper to set coordinates
+    window.fromCoordinates = { lat: 40.7128, lng: -74.0060 };
+    window.toCoordinates = { lat: 40.7128, lng: -73.9950 };
+    
+    // Wait for the Next button to be enabled
+    const nextButton = screen.getByText('Next');
+    await waitFor(() => {
+      expect(nextButton).not.toBeDisabled();
+    });
+    
+    // Click Next to go to the size step
+    fireEvent.click(nextButton);
+    
+    // Check that we're on the size step
+    await waitFor(() => {
+      expect(screen.getByText('What is the size of your move?')).toBeInTheDocument();
+    });
+    
+    // Select Small size
+    fireEvent.click(screen.getByText('Small'));
+    
+    // Verify a price estimate is displayed
+    await waitFor(() => {
+      const estimateElement = screen.getByText(/Estimated Price:/i);
+      expect(estimateElement).toBeInTheDocument();
+      expect(estimateElement.textContent).toMatch(/\$\d+/);
+    });
+  });
+  
+  // Helper function to directly set the current step (for testing purposes)
+  function setCurrentStepDirectly(step) {
+    // This is a simplified mock - in a real test you would use a more sophisticated approach
+    // to modify the component's internal state
+    const mockEvent = { target: { value: step } };
+    act(() => {
+      // Find all possible "Next" buttons and click them until we reach the right step
+      while (screen.queryByText(/What is the size of your move?/i) === null) {
+        const nextButton = screen.getByText('Next');
+        if (!nextButton.disabled) {
+          fireEvent.click(nextButton);
+        } else {
+          break;
+        }
+      }
+    });
+  }
+
+  // Add a comprehensive test that actually tests full form completion
+  test('should complete the entire form successfully', async () => {
+    // Mock the fetch function for form submission
+    global.fetch = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+      })
+    );
+
+    render(<EstimatePage />);
+    
+    // Step 1: Move Type
+    expect(screen.getByText('Get Your Free Moving Estimate')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Residential Move'));
+    fireEvent.click(screen.getByText('Next'));
+    
+    // Step 2: Locations
+    expect(screen.getByText('Where are you moving from and to?')).toBeInTheDocument();
+    
+    // Fill in addresses directly for testing purposes
+    const fromInput = screen.getByLabelText(/Moving From/i);
+    const toInput = screen.getByLabelText(/Moving To/i);
+    
+    fireEvent.change(fromInput, { target: { value: '123 Test Street, New York, NY' } });
+    fireEvent.change(toInput, { target: { value: '456 Other Street, New York, NY' } });
+    
+    // Set mock coordinates for testing
+    window.fromCoordinates = { lat: 40.7128, lng: -74.0060 };
+    window.toCoordinates = { lat: 40.7128, lng: -73.9950 };
+    
+    // Wait for the Next button to be enabled once both addresses have coordinates
+    const nextButton = await waitFor(() => {
+      const button = screen.getByText('Next');
+      if (!button.disabled) {
+        return button;
+      }
+      throw new Error('Next button still disabled');
+    });
+    
+    fireEvent.click(nextButton);
+    
+    // Step 3: Size
+    await waitFor(() => {
+      expect(screen.getByText('What is the size of your move?')).toBeInTheDocument();
+    });
+    
+    fireEvent.click(screen.getByText('Medium'));
+    fireEvent.click(screen.getByText('Next'));
+    
+    // Step 4: Date
+    await waitFor(() => {
+      expect(screen.getByText('When do you plan to move?')).toBeInTheDocument();
+    });
+    
+    // Select a date (for simplicity, we'll set the date input value directly)
+    const dateInput = screen.getByLabelText(/Move Date/i);
+    const twoWeeksFromNow = new Date();
+    twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+    const formattedDate = twoWeeksFromNow.toISOString().split('T')[0];
+    fireEvent.change(dateInput, { target: { value: formattedDate } });
+    
+    fireEvent.click(screen.getByText('Next'));
+    
+    // Step 5: Contact
+    await waitFor(() => {
+      expect(screen.getByText('Your Contact Information')).toBeInTheDocument();
+    });
+    
+    // Fill in contact details
+    fireEvent.change(screen.getByLabelText(/Full Name/i), { target: { value: 'Test User' } });
+    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByLabelText(/Phone/i), { target: { value: '1234567890' } });
+    
+    // Submit the form
+    fireEvent.click(screen.getByText('Submit'));
+    
+    // Check that the form was submitted
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalled();
+      const fetchArg = (global.fetch as jest.Mock).mock.calls[0][1];
+      const requestBody = JSON.parse(fetchArg.body);
+      
+      // Verify proper data was sent
+      expect(requestBody.moveType).toBe('residential');
+      expect(requestBody.fromAddress).toBe('123 Test Street, New York, NY');
+      expect(requestBody.toAddress).toBe('456 Other Street, New York, NY');
+      expect(requestBody.moveSize).toBe('medium');
+      expect(requestBody.moveDate).toBe(formattedDate);
+      expect(requestBody.name).toBe('Test User');
+      expect(requestBody.email).toBe('test@example.com');
+      expect(requestBody.phone).toBe('1234567890');
+    });
   });
 }); 

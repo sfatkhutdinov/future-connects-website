@@ -211,66 +211,62 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   }
 
   return (
-    <div className="mb-4 relative">
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
+    <div className="relative">
+      {label && (
+        <label htmlFor={id} className="block text-sm font-medium text-neutral-800 mb-1">
+          {label} {required && <span className="text-error-600">*</span>}
+        </label>
+      )}
       <div className="relative">
         <input
           type="text"
           id={id}
           ref={inputRef}
+          placeholder={placeholder}
           value={address}
           onChange={handleInputChange}
           onBlur={handleBlur}
           onFocus={handleFocus}
-          placeholder={placeholder}
-          required={required}
-          className={`w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-800 ${className}`}
+          className={`w-full p-3 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-700 ${className}`}
           autoComplete="off"
+          required={required}
         />
-        
-        {/* Loading indicator */}
         {loadingAutocomplete && (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-800"></div>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-800"></div>
           </div>
         )}
-        
-        {/* Suggestions dropdown */}
+      </div>
+      
+      <div className="relative">
         {showSuggestions && suggestions.length > 0 && (
-          <div className="suggestions-container" style={{ position: 'relative' }}>
-            <ul 
-              className="absolute w-full bg-white shadow-xl max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm"
-              style={{ 
-                zIndex: 9999, 
-                top: '0', 
-                left: '0', 
-                marginTop: '4px',
-                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
-              }}
-            >
-              {suggestions.map((suggestion) => (
-                <li
-                  key={suggestion.place_id}
-                  className="cursor-pointer px-4 py-2 hover:bg-blue-50 text-gray-900"
-                  onMouseDown={(e) => {
-                    e.preventDefault(); // Prevent blur event from firing
-                    handleSuggestionClick(suggestion);
-                  }}
-                >
-                  {suggestion.structured_formatting ? (
-                    <>
-                      <div className="font-medium">{suggestion.structured_formatting.main_text}</div>
-                      <div className="text-xs text-gray-500">{suggestion.structured_formatting.secondary_text}</div>
-                    </>
-                  ) : (
-                    suggestion.description
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ul 
+            className="absolute z-[9999] mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm"
+            style={{
+              top: '0',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+            }}
+          >
+            {suggestions.map((suggestion) => (
+              <li
+                key={suggestion.place_id}
+                className="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-primary-50 text-neutral-900"
+                onMouseDown={(e) => {
+                  e.preventDefault(); // Prevent blur event from firing
+                  handleSuggestionClick(suggestion);
+                }}
+              >
+                {suggestion.structured_formatting ? (
+                  <>
+                    <div className="font-medium">{suggestion.structured_formatting.main_text}</div>
+                    <div className="text-neutral-500 text-sm">{suggestion.structured_formatting.secondary_text}</div>
+                  </>
+                ) : (
+                  <div>{suggestion.description}</div>
+                )}
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>

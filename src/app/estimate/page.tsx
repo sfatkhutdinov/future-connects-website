@@ -122,7 +122,7 @@ export default function EstimatePage() {
       fromAddress: address
     }));
     
-    if (placeDetails && placeDetails.geometry?.location) {
+    if (placeDetails && placeDetails.geometry && placeDetails.geometry.location) {
       // Then update coordinates
       setFormData(prev => ({
         ...prev,
@@ -149,7 +149,7 @@ export default function EstimatePage() {
       toAddress: address
     }));
     
-    if (placeDetails && placeDetails.geometry?.location) {
+    if (placeDetails && placeDetails.geometry && placeDetails.geometry.location) {
       // Then update coordinates
       setFormData(prev => ({
         ...prev,
@@ -256,21 +256,21 @@ export default function EstimatePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div
                 className={`border rounded-lg p-6 cursor-pointer transition-colors ${
-                  formData.moveType === 'residential' ? 'border-blue-800 bg-blue-50' : 'border-gray-300 hover:border-blue-300'
+                  formData.moveType === 'residential' ? 'border-primary-700 bg-primary-50' : 'border-neutral-300 hover:border-primary-300'
                 }`}
                 onClick={() => updateFormData('moveType', 'residential')}
               >
                 <h3 className="text-xl font-semibold mb-2">Residential Move</h3>
-                <p className="text-gray-600">Moving from one home to another</p>
+                <p className="text-neutral-700">Moving from one home to another</p>
               </div>
               <div
                 className={`border rounded-lg p-6 cursor-pointer transition-colors ${
-                  formData.moveType === 'commercial' ? 'border-blue-800 bg-blue-50' : 'border-gray-300 hover:border-blue-300'
+                  formData.moveType === 'commercial' ? 'border-primary-700 bg-primary-50' : 'border-neutral-300 hover:border-primary-300'
                 }`}
                 onClick={() => updateFormData('moveType', 'commercial')}
               >
                 <h3 className="text-xl font-semibold mb-2">Commercial Move</h3>
-                <p className="text-gray-600">Moving your business or office</p>
+                <p className="text-neutral-700">Moving your business or office</p>
               </div>
             </div>
           </div>
@@ -298,9 +298,9 @@ export default function EstimatePage() {
               />
               
               {formData.fromCoordinates && formData.toCoordinates && (
-                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-blue-800">
-                    <span className="font-medium">Approximate Distance:</span> {estimatedCost.distance} miles
+                <div className="mt-4 p-4 bg-primary-50 rounded-lg">
+                  <p className="text-sm text-primary-900 font-medium">
+                    <span className="font-semibold">Approximate Distance:</span> {estimatedCost.distance} miles
                   </p>
                 </div>
               )}
@@ -316,12 +316,12 @@ export default function EstimatePage() {
                 <div
                   key={key}
                   className={`border rounded-lg p-4 cursor-pointer text-center transition-colors ${
-                    formData.moveSize === key ? 'border-blue-800 bg-blue-50' : 'border-gray-300 hover:border-blue-300'
+                    formData.moveSize === key ? 'border-primary-700 bg-primary-50' : 'border-neutral-300 hover:border-primary-300'
                   }`}
                   onClick={() => updateFormData('moveSize', key as MoveSize)}
                 >
                   <h3 className="font-semibold mb-1">{label}</h3>
-                  <p className="text-sm text-gray-600">{description}</p>
+                  <p className="text-sm text-neutral-700">{description}</p>
                 </div>
               ))}
             </div>
@@ -333,9 +333,9 @@ export default function EstimatePage() {
                   id="hasSpecialItems"
                   checked={formData.hasSpecialItems}
                   onChange={(e) => updateFormData('hasSpecialItems', e.target.checked)}
-                  className="h-4 w-4 text-blue-800 focus:ring-blue-800 border-gray-300 rounded"
+                  className="h-4 w-4 text-primary-800 focus:ring-primary-800 border-neutral-300 rounded"
                 />
-                <label htmlFor="hasSpecialItems" className="ml-2 block text-sm text-gray-700">
+                <label htmlFor="hasSpecialItems" className="ml-2 block text-sm text-neutral-700">
                   I have special items (piano, artwork, safe, antiques, etc.)
                 </label>
               </div>
@@ -346,17 +346,17 @@ export default function EstimatePage() {
                   id="needsPacking"
                   checked={formData.needsPacking}
                   onChange={(e) => updateFormData('needsPacking', e.target.checked)}
-                  className="h-4 w-4 text-blue-800 focus:ring-blue-800 border-gray-300 rounded"
+                  className="h-4 w-4 text-primary-800 focus:ring-primary-800 border-neutral-300 rounded"
                 />
-                <label htmlFor="needsPacking" className="ml-2 block text-sm text-gray-700">
+                <label htmlFor="needsPacking" className="ml-2 block text-sm text-neutral-700">
                   I need packing services
                 </label>
               </div>
             </div>
             
             <div className="mt-6">
-              <p className="text-sm text-gray-600">
-                Not sure about the size? <Link href="/contact" className="text-blue-800 hover:underline">Contact us</Link> for a custom estimate.
+              <p className="text-sm text-neutral-600">
+                Not sure about the size? <Link href="/contact" className="text-primary-800 hover:underline">Contact us</Link> for a custom estimate.
               </p>
             </div>
           </div>
@@ -367,7 +367,7 @@ export default function EstimatePage() {
             <h2 className="text-2xl font-bold mb-6">When are you planning to move?</h2>
             <div className="space-y-4">
               <div>
-                <label htmlFor="moveDate" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="moveDate" className="block text-sm font-medium text-neutral-700 mb-1">
                   Preferred Move Date
                 </label>
                 <input
@@ -375,13 +375,13 @@ export default function EstimatePage() {
                   id="moveDate"
                   value={formData.moveDate}
                   onChange={(e) => updateFormData('moveDate', e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-800"
+                  className="w-full p-3 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-700"
                   min={new Date().toISOString().split('T')[0]}
                 />
               </div>
               
               <div>
-                <label htmlFor="moveTime" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="moveTime" className="block text-sm font-medium text-neutral-700 mb-1">
                   Preferred Start Time
                 </label>
                 <input
@@ -389,21 +389,21 @@ export default function EstimatePage() {
                   id="moveTime"
                   value={formData.moveTime || ''}
                   onChange={(e) => updateFormData('moveTime', e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-800"
+                  className="w-full p-3 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-700"
                 />
               </div>
             </div>
             
             <div className="mt-4">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-neutral-600">
                 We recommend booking your move at least 2 weeks in advance, especially during peak season (May-August).
               </p>
             </div>
             
             {formData.moveDate && formData.fromCoordinates && formData.toCoordinates && formData.moveSize && (
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                <p className="font-medium text-blue-800">Estimated Cost: ${estimatedCost.min} - ${estimatedCost.max}</p>
-                <p className="text-sm text-blue-600 mt-1">
+              <div className="mt-4 p-4 bg-primary-50 rounded-lg">
+                <p className="font-medium text-primary-900">Estimated Cost: ${estimatedCost.min} - ${estimatedCost.max}</p>
+                <p className="text-sm text-primary-800 mt-1">
                   This is a preliminary estimate based on the information provided. 
                   Factors like specific inventory items and access conditions may affect the final price.
                 </p>
@@ -417,7 +417,7 @@ export default function EstimatePage() {
             <h2 className="text-2xl font-bold mb-6">Tell us about yourself</h2>
             <div className="space-y-4">
               <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="fullName" className="block text-sm font-medium text-neutral-800 mb-1">
                   Full Name *
                 </label>
                 <input
@@ -426,12 +426,12 @@ export default function EstimatePage() {
                   placeholder="Enter your full name"
                   value={formData.fullName}
                   onChange={(e) => updateFormData('fullName', e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-800"
+                  className="w-full p-3 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-700"
                   required
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-neutral-800 mb-1">
                   Email Address *
                 </label>
                 <input
@@ -440,12 +440,12 @@ export default function EstimatePage() {
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={(e) => updateFormData('email', e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-800"
+                  className="w-full p-3 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-700"
                   required
                 />
               </div>
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="phone" className="block text-sm font-medium text-neutral-800 mb-1">
                   Phone Number *
                 </label>
                 <input
@@ -454,14 +454,14 @@ export default function EstimatePage() {
                   placeholder="Enter your phone number"
                   value={formData.phone}
                   onChange={(e) => updateFormData('phone', e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-800"
+                  className="w-full p-3 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-700"
                   required
                 />
               </div>
               
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                <p className="font-medium text-blue-800">Estimated Cost: ${estimatedCost.min} - ${estimatedCost.max}</p>
-                <p className="text-sm text-blue-600 mt-1">
+              <div className="mt-4 p-4 bg-primary-50 rounded-lg">
+                <p className="font-medium text-primary-900">Estimated Cost: ${estimatedCost.min} - ${estimatedCost.max}</p>
+                <p className="text-sm text-primary-800 mt-1">
                   A member of our team will contact you to confirm your estimate and discuss any specific requirements.
                 </p>
               </div>
@@ -472,34 +472,34 @@ export default function EstimatePage() {
         return (
           <div>
             <h2 className="text-2xl font-bold mb-6">Your Estimate Summary</h2>
-            <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 mb-6">
+            <div className="bg-neutral-50 p-6 rounded-lg border border-neutral-200 mb-6">
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-gray-600">Move Type</p>
+                  <p className="text-sm text-neutral-600">Move Type</p>
                   <p className="font-medium">{formData.moveType === 'residential' ? 'Residential Move' : 'Commercial Move'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">From</p>
+                  <p className="text-sm text-neutral-600">From</p>
                   <p className="font-medium">{formData.fromAddress}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">To</p>
+                  <p className="text-sm text-neutral-600">To</p>
                   <p className="font-medium">{formData.toAddress}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Move Size</p>
+                  <p className="text-sm text-neutral-600">Move Size</p>
                   <p className="font-medium">{MOVE_SIZES[formData.moveSize]?.label || formData.moveSize}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Preferred Date</p>
+                  <p className="text-sm text-neutral-600">Preferred Date</p>
                   <p className="font-medium">{new Date(formData.moveDate).toLocaleDateString()}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Estimated Distance</p>
+                  <p className="text-sm text-neutral-600">Estimated Distance</p>
                   <p className="font-medium">{estimatedCost.distance} miles</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Additional Services</p>
+                  <p className="text-sm text-neutral-600">Additional Services</p>
                   <p className="font-medium">
                     {[
                       formData.hasSpecialItems ? 'Special Items Handling' : null,
@@ -508,10 +508,10 @@ export default function EstimatePage() {
                   </p>
                 </div>
               </div>
-              <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="mt-6 pt-6 border-t border-neutral-200">
                 <p className="text-lg font-bold">Estimated Cost Range:</p>
-                <p className="text-3xl font-bold text-blue-800">${estimatedCost.min} - ${estimatedCost.max}</p>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-3xl font-bold text-primary-800">${estimatedCost.min} - ${estimatedCost.max}</p>
+                <p className="text-sm text-neutral-600 mt-1">
                   This is a preliminary estimate. Our team will contact you with a more precise quote.
                 </p>
               </div>
@@ -566,30 +566,30 @@ export default function EstimatePage() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12">
+    <div className="bg-neutral-50 min-h-screen py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {/* Progress steps */}
-          <div className="bg-blue-800 py-4 px-6">
+          <div className="bg-primary-900 py-4 px-6">
             <div className="flex justify-between">
-              <div className={`flex-1 text-center ${currentStep === 'move-type' ? 'text-white' : 'text-blue-300'}`}>
-                <div className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto mb-1 text-xs ${currentStep === 'move-type' ? 'bg-white text-blue-800' : 'bg-blue-500 text-white'}`}>1</div>
+              <div className={`flex-1 text-center ${currentStep === 'move-type' ? 'text-white' : 'text-primary-200'}`}>
+                <div className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto mb-1 text-xs ${currentStep === 'move-type' ? 'bg-white text-primary-900' : 'bg-primary-600 text-white'}`}>1</div>
                 <span className="text-xs">Type</span>
               </div>
-              <div className={`flex-1 text-center ${currentStep === 'locations' ? 'text-white' : 'text-blue-300'}`}>
-                <div className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto mb-1 text-xs ${currentStep === 'locations' ? 'bg-white text-blue-800' : 'bg-blue-500 text-white'}`}>2</div>
+              <div className={`flex-1 text-center ${currentStep === 'locations' ? 'text-white' : 'text-primary-200'}`}>
+                <div className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto mb-1 text-xs ${currentStep === 'locations' ? 'bg-white text-primary-900' : 'bg-primary-600 text-white'}`}>2</div>
                 <span className="text-xs">Locations</span>
               </div>
-              <div className={`flex-1 text-center ${currentStep === 'size' ? 'text-white' : 'text-blue-300'}`}>
-                <div className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto mb-1 text-xs ${currentStep === 'size' ? 'bg-white text-blue-800' : 'bg-blue-500 text-white'}`}>3</div>
+              <div className={`flex-1 text-center ${currentStep === 'size' ? 'text-white' : 'text-primary-200'}`}>
+                <div className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto mb-1 text-xs ${currentStep === 'size' ? 'bg-white text-primary-900' : 'bg-primary-600 text-white'}`}>3</div>
                 <span className="text-xs">Size</span>
               </div>
-              <div className={`flex-1 text-center ${currentStep === 'date' ? 'text-white' : 'text-blue-300'}`}>
-                <div className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto mb-1 text-xs ${currentStep === 'date' ? 'bg-white text-blue-800' : 'bg-blue-500 text-white'}`}>4</div>
+              <div className={`flex-1 text-center ${currentStep === 'date' ? 'text-white' : 'text-primary-200'}`}>
+                <div className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto mb-1 text-xs ${currentStep === 'date' ? 'bg-white text-primary-900' : 'bg-primary-600 text-white'}`}>4</div>
                 <span className="text-xs">Date</span>
               </div>
-              <div className={`flex-1 text-center ${currentStep === 'contact' ? 'text-white' : 'text-blue-300'}`}>
-                <div className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto mb-1 text-xs ${currentStep === 'contact' ? 'bg-white text-blue-800' : 'bg-blue-500 text-white'}`}>5</div>
+              <div className={`flex-1 text-center ${currentStep === 'contact' ? 'text-white' : 'text-primary-200'}`}>
+                <div className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto mb-1 text-xs ${currentStep === 'contact' ? 'bg-white text-primary-900' : 'bg-primary-600 text-white'}`}>5</div>
                 <span className="text-xs">Contact</span>
               </div>
             </div>
@@ -597,8 +597,8 @@ export default function EstimatePage() {
 
           {/* Form content */}
           <div className="p-6 md:p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Get Your Free Moving Estimate</h1>
-            <p className="text-gray-600 mb-8">Fill out the form below to receive an estimate for your move.</p>
+            <h1 className="text-3xl font-bold text-neutral-900 mb-2">Get Your Free Moving Estimate</h1>
+            <p className="text-neutral-700 mb-8">Fill out the form below to receive an estimate for your move.</p>
             
             <form onSubmit={handleSubmit}>
               {/* Dynamic content based on step */}
@@ -606,7 +606,7 @@ export default function EstimatePage() {
               
               {/* Error message */}
               {error && (
-                <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+                <div className="mt-4 bg-error-50 border border-error-200 text-error-700 px-4 py-3 rounded-md">
                   {error}
                 </div>
               )}
@@ -617,7 +617,7 @@ export default function EstimatePage() {
                   <button
                     type="button"
                     onClick={goToPreviousStep}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                    className="px-4 py-2 border border-neutral-300 rounded-md text-neutral-700 hover:bg-neutral-50"
                   >
                     Back
                   </button>
@@ -630,8 +630,8 @@ export default function EstimatePage() {
                     <button
                       type="submit"
                       disabled={isNextDisabled() || isSubmitting}
-                      className={`px-6 py-2 bg-blue-800 text-white rounded-md ${
-                        isNextDisabled() || isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+                      className={`px-6 py-2 bg-primary-800 text-white rounded-md ${
+                        isNextDisabled() || isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-700'
                       }`}
                     >
                       {isSubmitting ? 'Submitting...' : 'Submit'}
@@ -641,8 +641,8 @@ export default function EstimatePage() {
                       type="button"
                       onClick={goToNextStep}
                       disabled={isNextDisabled()}
-                      className={`px-6 py-2 bg-blue-800 text-white rounded-md ${
-                        isNextDisabled() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+                      className={`px-6 py-2 bg-primary-800 text-white rounded-md ${
+                        isNextDisabled() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-700'
                       }`}
                     >
                       Next
@@ -651,7 +651,7 @@ export default function EstimatePage() {
                 ) : (
                   <Link 
                     href="/"
-                    className="px-6 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700"
+                    className="px-6 py-2 bg-primary-800 text-white rounded-md hover:bg-primary-700"
                   >
                     Return Home
                   </Link>

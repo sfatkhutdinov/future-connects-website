@@ -7,6 +7,21 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-geist)'],
+        mono: ['var(--font-geist-mono)'],
+      },
+      fontWeight: {
+        thin: '100',
+        extralight: '200',
+        light: '300',
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
+        extrabold: '800',
+        black: '900',
+      },
       colors: {
         primary: {
           50: '#EFF6FF',
@@ -19,7 +34,7 @@ export default {
           700: '#1D4ED8',
           800: '#1E40AF',
           900: '#1E3A8A',
-          950: '#0A216F',
+          950: '#172554',
         },
         neutral: {
           50: '#F9FAFB',
@@ -74,43 +89,42 @@ export default {
           950: '#451A03',
         },
         info: {
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          200: '#BFDBFE',
-          300: '#93C5FD',
-          400: '#60A5FA',
-          500: '#3B82F6',
-          600: '#2563EB',
-          700: '#1D4ED8',
-          800: '#1E40AF',
-          900: '#1E3A8A',
-          950: '#172554',
+          50: '#F0F9FF',
+          100: '#E0F2FE',
+          200: '#BAE6FD',
+          300: '#7DD3FC',
+          400: '#38BDF8',
+          500: '#0EA5E9',
+          600: '#0284C7',
+          700: '#0369A1',
+          800: '#075985',
+          900: '#0C4A6E',
+          950: '#082F49',
         },
         blue: {
-          50: '#EFF6FF',
           100: '#DBEAFE',
-          200: '#BFDBFE',
-          300: '#93C5FD',
-          400: '#60A5FA',
-          500: '#3B82F6',
           600: '#2563EB',
           700: '#1D4ED8',
           800: '#1E40AF',
-          900: '#1E3A8A',
-          950: '#0A216F',
         },
         gray: {
           50: '#F9FAFB',
           100: '#F3F4F6',
           200: '#E5E7EB',
           300: '#D1D5DB',
-          400: '#9CA3AF',
           500: '#6B7280',
-          600: '#4B5563',
           700: '#374151',
           800: '#1F2937',
           900: '#111827',
-          950: '#030712',
+        },
+        background: {
+          DEFAULT: '#ffffff',
+          dark: '#030712',
+        },
+        text: {
+          DEFAULT: '#171717',
+          dark: '#f9fafb',
+          muted: '#6B7280',
         },
       },
       backgroundColor: {
@@ -128,4 +142,7 @@ export default {
     },
   },
   plugins: [],
+  corePlugins: {
+    fontWeight: true,
+  }
 }; 

@@ -183,7 +183,7 @@ const MoveMap: React.FC<MoveMapProps> = ({
                 onCloseClick={() => setShowInfoWindow(false)}
               >
                 <div className="p-2">
-                  <p className="font-medium">Future Connects Moving</p>
+                  <p className="fw-medium">Future Connects Moving</p>
                   {eta && <p className="text-sm">ETA: {new Date(eta).toLocaleTimeString()}</p>}
                 </div>
               </InfoWindow>

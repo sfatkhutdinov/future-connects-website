@@ -190,7 +190,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   if (loadError) {
     return (
       <div className="mb-4">
-        <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor={id} className="block text-sm fw-medium text-gray-700 mb-1">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
         <input
@@ -213,7 +213,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   return (
     <div className="relative">
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-neutral-800 mb-1">
+        <label htmlFor={id} className="block text-sm fw-medium text-neutral-800 mb-1">
           {label} {required && <span className="text-error-600">*</span>}
         </label>
       )}
@@ -258,7 +258,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
               >
                 {suggestion.structured_formatting ? (
                   <>
-                    <div className="font-medium">{suggestion.structured_formatting.main_text}</div>
+                    <div className="fw-medium">{suggestion.structured_formatting.main_text}</div>
                     <div className="text-neutral-500 text-sm">{suggestion.structured_formatting.secondary_text}</div>
                   </>
                 ) : (

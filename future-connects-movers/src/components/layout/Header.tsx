@@ -27,43 +27,43 @@ const Header = () => {
           <nav className="hidden md:ml-6 md:flex md:space-x-8">
             <Link 
               href="/" 
-              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
+              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm fw-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
             >
               Home
             </Link>
             <Link 
               href="/about" 
-              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
+              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm fw-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
             >
               About
             </Link>
             <Link 
               href="/services" 
-              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
+              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm fw-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
             >
               Services
             </Link>
             <Link 
               href="/estimate" 
-              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
+              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm fw-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
             >
               Get Estimate
             </Link>
             <Link 
               href="/booking" 
-              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
+              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm fw-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
             >
               Book Now
             </Link>
             <Link 
               href="/tracking" 
-              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
+              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm fw-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
             >
               Track Move
             </Link>
             <Link 
               href="/contact" 
-              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
+              className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm fw-medium text-neutral-800 hover:border-primary-600 hover:text-primary-700"
             >
               Contact
             </Link>
@@ -120,49 +120,49 @@ const Header = () => {
         <div className="pt-2 pb-3 space-y-1">
           <Link
             href="/"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
+            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base fw-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
             onClick={() => setMobileMenuOpen(false)}
           >
             Home
           </Link>
           <Link
             href="/about"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
+            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base fw-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
             onClick={() => setMobileMenuOpen(false)}
           >
             About
           </Link>
           <Link
             href="/services"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
+            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base fw-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
             onClick={() => setMobileMenuOpen(false)}
           >
             Services
           </Link>
           <Link
             href="/estimate"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
+            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base fw-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
             onClick={() => setMobileMenuOpen(false)}
           >
             Get Estimate
           </Link>
           <Link
             href="/booking"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
+            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base fw-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
             onClick={() => setMobileMenuOpen(false)}
           >
             Book Now
           </Link>
           <Link
             href="/tracking"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
+            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base fw-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
             onClick={() => setMobileMenuOpen(false)}
           >
             Track Move
           </Link>
           <Link
             href="/contact"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
+            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base fw-medium text-neutral-800 hover:bg-neutral-50 hover:border-primary-600 hover:text-primary-700"
             onClick={() => setMobileMenuOpen(false)}
           >
             Contact

@@ -1,6 +1,6 @@
-# Swift Movers Website
+# Future Connects Movers Website
 
-This repository contains the source code for the Swift Movers website, a professional moving company offering residential and commercial moving services.
+This repository contains the source code for the Future Connects Movers website, a professional moving company offering residential and commercial moving services.
 
 ## Table of Contents
 
@@ -14,7 +14,7 @@ This repository contains the source code for the Swift Movers website, a profess
 
 ## Overview
 
-The Swift Movers website is built using Next.js with TypeScript and features a modern, responsive design. It includes various pages for services, contact information, and a moving cost estimator.
+The Future Connects Movers website is built using Next.js with TypeScript and features a modern, responsive design. It includes various pages for services, contact information, and a moving cost estimator.
 
 ## Features
 
@@ -30,12 +30,13 @@ To get started with the project:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/swift_movers.git
-   cd swift_movers/website
+   git clone https://github.com/sfatkhutdinov/future-connects-website.git
+   cd future-connects-website
    ```
 
-2. Install dependencies:
+2. Navigate to the website directory and install dependencies:
    ```bash
+   cd future-connects-movers
    npm install
    ```
 
@@ -57,18 +58,28 @@ To get started with the project:
 ## Project Structure
 
 ```
-website/
-├── public/          # Static assets
-├── src/
-│   ├── app/         # App router pages and API routes
-│   ├── components/  # Reusable UI components
-│   ├── lib/         # Utility functions and shared logic
-│   ├── styles/      # Global styles and Tailwind configuration
-│   ├── types/       # TypeScript type definitions
-│   └── __tests__/   # Unit and integration tests
-├── .env.local       # Environment variables (not committed to Git)
-├── package.json     # Dependencies and scripts
-└── README.md        # This file
+./
+├── future-connects-movers/  # Main website directory
+│   ├── public/            # Static assets
+│   ├── src/
+│   │   ├── app/           # App router pages and API routes
+│   │   │   ├── about/     # About page
+│   │   │   ├── api/       # API endpoints
+│   │   │   ├── booking/   # Booking pages
+│   │   │   ├── contact/   # Contact page
+│   │   │   ├── dashboard/ # User dashboard
+│   │   │   ├── estimate/  # Moving estimate calculator
+│   │   │   ├── services/  # Services pages
+│   │   │   └── tracking/  # Move tracking functionality
+│   │   ├── components/    # Reusable UI components
+│   │   ├── lib/           # Utility functions and shared logic
+│   │   ├── styles/        # Global styles and Tailwind configuration
+│   │   ├── types/         # TypeScript type definitions
+│   │   └── __tests__/     # Unit and integration tests
+│   ├── .env.local         # Environment variables (not committed to Git)
+│   ├── package.json       # Dependencies and scripts
+│   └── README.md          # This file
+└── .git/                  # Git repository data
 ```
 
 ## Testing
